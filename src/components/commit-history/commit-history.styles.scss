@@ -1,0 +1,14 @@
+.commit-history{
+
+    height: 65vh;
+    overflow-y: auto;
+
+    .empty-data-text{
+        font-size: 30px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
