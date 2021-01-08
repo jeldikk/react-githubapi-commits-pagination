@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Container } from 'react-bootstrap'
-import ReactPaginate from "react-paginate"
 
 import Header from './components/header/header.component'
 import Footer from "./components/footer/footer.component"
@@ -10,9 +9,7 @@ import CommitHistory from "./components/commit-history/commit-history.component"
 import Pagination from "./components/pagination/pagination.component"
 // import axios from 'axios';
 
-
-
-import { fetchData } from "./axios/axios.util"
+import { fetchData, getTotalCommitCount } from "./axios/axios.util"
 
 class App extends React.Component {
 
@@ -23,6 +20,7 @@ class App extends React.Component {
     data: [],
     per_page: 10,
     page_num: 1,
+    errorMessage: null,
     totalItemsCount: null
   }
 
@@ -41,13 +39,40 @@ class App extends React.Component {
     console.log("Execution came here")
     fetchData(owner, repo, per_page, page_num)
       .then((response => {
-        if (response.status === 200) {
+        
+        if (response.status === 200 || response.status === 304) {
 
-          this.setState({
-            data: response.data
-          })
+          // console.log('after condition of updateCommitData')
+          
+          if(this.state.data.length === 0){
+            let totalCount = getTotalCommitCount(response.headers.link);
+            // console.log("here is the total count", totalCount)
+            this.setState({
+              data: response.data,
+              errorMessage: null,
+              isLoading: false,
+              totalItemsCount: totalCount
+            })
+          }
+          else{
+            this.setState({
+              data: response.data,
+              errorMessage: null,
+              isLoading: false,
+            })
+          }
+          
         }
+
+
       }))
+      .catch((err) => {
+        this.setState({
+          errorMessage: err.message,
+          isLoading: false,
+          data: []
+        })
+      })
   }
 
   updateInputDetails = ({ owner, repo }) => {
@@ -57,7 +82,8 @@ class App extends React.Component {
       return {
         ...prevState,
         owner,
-        repo
+        repo,
+        data: []
       }
     }, () => this.updateCommitData(this.state))
 
@@ -65,16 +91,31 @@ class App extends React.Component {
 
   onPageChange = (pagenumber) => {
     console.log("The page number is ", pagenumber)
+
+    this.setState((prevState, prevProps)=>{
+      return {
+        ...prevState,
+        page_num: pagenumber.selected+1
+      }
+    },() => this.updateCommitData(this.state))
   }
 
   render() {
+
+    const {totalItemsCount, per_page} = this.state;
     return (
       <div className="app">
         <Header />
         <Container>
           <InputForm updateInputDetails={this.updateInputDetails} />
-          <CommitHistory commitList={this.state.data} />
-          <Pagination pageCount={2} pageRangeDisplayed={5} marginPagesDisplayed={5} onPageChange={this.onPageChange}/>
+          <CommitHistory commitList={this.state.data} errorMessage={this.state.errorMessage} />
+          {
+            totalItemsCount
+            ?
+            <Pagination pageCount={this.state.totalItemsCount/this.state.per_page} pageRangeDisplayed={3} marginPagesDisplayed={3} onPageChange={this.onPageChange}/>
+            : null
+          }
+          
         </Container>
         <Footer />
       </div>
