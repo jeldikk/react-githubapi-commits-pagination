@@ -7,9 +7,13 @@ import Footer from "./components/footer/footer.component"
 import InputForm from "./components/input-form/input-form.component"
 import CommitHistory from "./components/commit-history/commit-history.component"
 import Pagination from "./components/pagination/pagination.component"
-// import axios from 'axios';
+
+import withSpinner from "./components/with-spinner/with-spinner.component"
 
 import { fetchData, getTotalCommitCount } from "./axios/axios.util"
+
+
+const CommitHistoryWithSpinner = withSpinner(CommitHistory)
 
 class App extends React.Component {
 
@@ -108,7 +112,8 @@ class App extends React.Component {
         <Header />
         <Container>
           <InputForm updateInputDetails={this.updateInputDetails} />
-          <CommitHistory commitList={this.state.data} errorMessage={this.state.errorMessage} />
+          {/* <CommitHistory commitList={this.state.data} errorMessage={this.state.errorMessage} /> */}
+          <CommitHistoryWithSpinner isLoading={this.state.isLoading} commitList={this.state.data} errorMessage={this.state.errorMessage} />
           {
             totalItemsCount
             ?
