@@ -8,7 +8,8 @@ const Pagination = ({ ...otherProps }) => {
   return (
     <div className="pagination-container">
       <ReactPaginate
-        containerClassName="pagination pagination-lg"
+        {...otherProps}
+        containerClassName="pagination pagination-md"
         pageClassName="page-item"
         previousClassName="page-item"
         previousLinkClassName="page-link"
@@ -21,7 +22,6 @@ const Pagination = ({ ...otherProps }) => {
         previousLabel="Previous"
         nextLabel="Next"
         breakLabel="..."
-        {...otherProps}
       />
     </div>
   );
