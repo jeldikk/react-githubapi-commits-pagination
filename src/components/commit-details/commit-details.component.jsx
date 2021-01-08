@@ -1,15 +1,25 @@
 import React from 'react'
 
+import {Card} from 'react-bootstrap'
+
 import "./commit-details.styles.scss"
 
 function CommitDetails({commitObj}) {
 
-    const {commit:{message}} = commitObj
+    const {commit:{message},author:{login}} = commitObj;
+    console.log(commitObj)
 
     return (
-        <div className="commit-details">
-            {message}
-        </div>
+        <Card className="commit-details shadow-lg">
+            <Card.Header>
+                {login}
+            </Card.Header>
+            <Card.Body>
+                <Card.Text>
+                    {message}
+                </Card.Text>
+            </Card.Body>
+        </Card>
     )
 }
 
