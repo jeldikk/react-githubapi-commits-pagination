@@ -1,4 +1,6 @@
 import axios from 'axios'
+// import {URL} from 'url'
+import urlParse from "url-parse"
 
 export const fetchData = async (owner, reponame, itemsPerPage, pageNumber) => {
     const config = {
@@ -15,4 +17,18 @@ export const fetchData = async (owner, reponame, itemsPerPage, pageNumber) => {
     }
     const response = await axios(config)
     return response
+}
+
+export const getTotalCommitCount = (linkString) => {
+    // console.log({linkString})
+    console.log("getTotalCommitCount Called ")
+    let linksList = linkString.split(',');
+    let lastLink = linksList.filter((link) => link.includes('rel=\"last\"'))[0];
+    lastLink = lastLink.trim().split(';')[0]
+    lastLink = lastLink.replace('>','').replace('<','')
+    
+    let parse = urlParse(lastLink, true)
+    const {page, per_page} = parse.query;
+    return page*per_page
+    
 }
