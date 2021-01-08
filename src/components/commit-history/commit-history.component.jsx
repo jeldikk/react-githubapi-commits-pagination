@@ -4,7 +4,7 @@ import "./commit-history.styles.scss";
 
 import CommitDetails from "../commit-details/commit-details.component";
 
-function CommitHistory({ commitList }) {
+function CommitHistory({ commitList, errorMessage }) {
     // console.log({commitList})
   return (
     <div className="commit-history">
