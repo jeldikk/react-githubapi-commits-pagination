@@ -5,11 +5,26 @@
     padding: 20px;
 
     .empty-data-text{
-        font-size: 30px;
+        
+        // font-size: 30px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        .description{
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .howto{
+            text-align: center;
+            .description{
+                font-size: 20px;
+                text-align: center;
+            }
+        }
+        
     }
 }
